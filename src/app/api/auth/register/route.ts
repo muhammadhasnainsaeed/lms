@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { prisma } from "@/lib/prisma";
-import { NextResponse, userAgent } from "next/server";
+import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 
 // Handle POST request
