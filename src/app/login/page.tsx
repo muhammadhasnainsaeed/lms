@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Link from "next/link";
 
 export default function login() {
   return (
@@ -18,7 +19,9 @@ export default function login() {
             Enter your email below to login to your account
           </CardDescription>
           <CardAction>
-            <Button variant="link">Sign Up</Button>
+            <Button variant="link">
+              <Link href={"/register"}>Sign Up</Link>
+            </Button>
           </CardAction>
         </CardHeader>
         <LoginForm />
