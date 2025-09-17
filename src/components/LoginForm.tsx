@@ -18,6 +18,19 @@ import { useState } from "react";
 import { Loader2Icon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+interface LoginResponse {
+  success: boolean;
+  message: string;
+  error: string;
+  data: {
+    email: string;
+    name: string;
+    role: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
 const fields = [
   {
     name: "email",
@@ -61,10 +74,11 @@ export default function LoginForm() {
         },
         body: JSON.stringify(data),
       });
-      const result = await response.json();
+
+      const result: LoginResponse = await response.json();
       if (response.ok) {
         console.log(JSON.stringify(result, null, 2));
-        router.push("/");
+        router.push(result.data.role === "ADMIN" ? "admin" : "/");
       } else {
         toast.error(result.error);
       }

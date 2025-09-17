@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { cookies } from "next/headers";
 
 export async function POST(request: Request) {
   try {
@@ -39,10 +40,20 @@ export async function POST(request: Request) {
 
     // ✅ Create JWT
     const token = jwt.sign(
-      { id: user.id, name: user.name, email: user.email },
+      { id: user.id, name: user.name, email: user.email, role: user.role },
       process.env.JWT_SECRET as string,
-      { expiresIn: "1h" } // token valid for 1 hour
+      { expiresIn: "7d" } // token valid for 7 days
     );
+
+    // 4. Save token in HttpOnly cookie
+    const cookieStore = await cookies();
+    cookieStore.set("token", token, {
+      httpOnly: true, // ✅ cannot be accessed via JS (secure)
+      secure: process.env.NODE_ENV === "production", // ✅ use HTTPS in production
+      sameSite: "strict",
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: "/", // cookie is valid for all routes
+    });
 
     // Remove password before sending user data
     const { password: _, ...safeUser } = user;
