@@ -22,6 +22,7 @@ interface LoginResponse {
   success: boolean;
   message: string;
   error: string;
+  redirect: string;
   data: {
     email: string;
     name: string;
@@ -78,7 +79,7 @@ export default function LoginForm() {
       const result: LoginResponse = await response.json();
       if (response.ok) {
         console.log(JSON.stringify(result, null, 2));
-        router.push(result.data.role === "ADMIN" ? "admin" : "/");
+        router.push(result.redirect);
       } else {
         toast.error(result.error);
       }

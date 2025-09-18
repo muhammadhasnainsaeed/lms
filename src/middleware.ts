@@ -1,16 +1,21 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import jwt from "jsonwebtoken";
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
   if (!token) return NextResponse.redirect(new URL("/login", request.url));
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {
-      id: number;
-      role: string;
-    };
+    const response = await fetch(`${request.nextUrl.origin}/api/auth/verify`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token }),
+    });
+    const decoded = await response.json();
+
+    if (!decoded.success) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
 
     const { pathname } = request.nextUrl;
 
@@ -30,7 +35,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   } catch (e) {
     console.log(e);
-    return NextResponse.redirect(new URL("/login", request.url));
+    // return NextResponse.redirect(new URL("/login", request.url));
   }
 }
 

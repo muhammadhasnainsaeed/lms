@@ -58,12 +58,15 @@ export async function POST(request: Request) {
     // Remove password before sending user data
     const { password: _, ...safeUser } = user;
 
+    // ✅ Decide redirect based on role
+    const redirect = user.role === "ADMIN" ? "/admin" : "/dashboard";
+
     // For now just return success (later we’ll add JWT/session)
     return NextResponse.json(
       {
         success: true,
         message: "Login successful",
-        token, // Include the token in the response
+        redirect, // Include the token in the response
         data: safeUser, // Include user data (without password)
       },
       { status: 200 }
