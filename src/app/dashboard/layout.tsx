@@ -1,9 +1,10 @@
 import React from "react";
+import RootLayout from "../layout";
 
 export default function dashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <div>{children}</div>;
+  return <RootLayout>{children}</RootLayout>;
 }
