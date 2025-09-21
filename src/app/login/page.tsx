@@ -1,3 +1,4 @@
+import AuthFormLayout from "@/components/AuthFormLayout";
 import LoginForm from "@/components/LoginForm";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,7 +12,7 @@ import Link from "next/link";
 
 export default function login() {
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <AuthFormLayout>
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>Login to your account</CardTitle>
@@ -26,6 +27,6 @@ export default function login() {
         </CardHeader>
         <LoginForm />
       </Card>
-    </div>
+    </AuthFormLayout>
   );
 }
