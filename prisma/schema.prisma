@@ -16,35 +16,63 @@ datasource db {
 enum Role {
   ADMIN
   STUDENT
-  TEACHER
+  INSTRUCTOR
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  password  String
-  role      Role      @default(STUDENT)
-  courses   CourseEnrollment[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  id            Int                @id @default(autoincrement())
+  name          String
+  email         String             @unique
+  password      String
+  role          Role               @default(STUDENT)
+  courses       CourseEnrollment[]
+  taughtCourses Course[]           @relation("InstructorCourses")
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
 }
 
 model Course {
+  id           Int                @id @default(autoincrement())
+  title        String
+  description  String?
+  content      String?
+  imageUrl     String?
+  instructorId Int
+  instructor   User               @relation("InstructorCourses", fields: [instructorId], references: [id])
+  students     CourseEnrollment[]
+  lessons      Lesson[]
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+}
+
+model Lesson {
   id        Int      @id @default(autoincrement())
   title     String
   content   String?
-  imageUrl  String?
+  courseId  Int
+  course    Course   @relation(fields: [courseId], references: [id])
+  order     Int
+  videos    Video[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  students  CourseEnrollment[]
+}
+
+model Video {
+  id       Int    @id @default(autoincrement())
+  title    String
+  url      String
+  duration Int? // store video length in seconds (optional)
+  lessonId Int
+  lesson   Lesson @relation(fields: [lessonId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model CourseEnrollment {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  courseId  Int
-  user      User   @relation(fields: [userId], references: [id])
-  course    Course @relation(fields: [courseId], references: [id])
+  id       Int    @id @default(autoincrement())
+  userId   Int
+  courseId Int
+  user     User   @relation(fields: [userId], references: [id])
+  course   Course @relation(fields: [courseId], references: [id])
 }
