@@ -28,9 +28,7 @@ export async function POST(request: Request) {
 
 export async function GET() {
   try {
-    const courses = await prisma.course.findMany({
-      select: { id: true, title: true, content: true, createdAt: true },
-    });
+    const courses = await prisma.course.findMany();
 
     return NextResponse.json(courses, { status: 200 });
   } catch (error) {

@@ -1,3 +1,9 @@
+import CoursesContainer from "@/components/courses/CoursesContainer";
+
 export default function courses() {
-  return <div>courses page</div>;
+  return (
+    <div>
+      <CoursesContainer />
+    </div>
+  );
 }
