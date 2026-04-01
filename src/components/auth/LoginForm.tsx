@@ -16,7 +16,7 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { Loader2Icon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { LoginSchema, type LoginInput } from "@/lib/validations/auth";
+import { LoginSchema, type LoginInput } from "@/utils/validations/auth";
 import { type LoginResponse } from "@/types/user";
 
 const fields = [

@@ -16,7 +16,7 @@ import { toast } from "sonner";
 import { Loader2Icon } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { RegisterSchema, type RegisterInput } from "@/lib/validations/auth";
+import { RegisterSchema, type RegisterInput } from "@/utils/validations/auth";
 
 const fields = [
   {
