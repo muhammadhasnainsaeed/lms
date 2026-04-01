@@ -8,7 +8,7 @@ export async function POST(request: Request) {
     if (!body.title || !body.instructorId) {
       return NextResponse.json(
         { error: "Title and instructorId are required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     console.error("POST /api/courses error:", error);
     return NextResponse.json(
       { error: "Failed to create course" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -51,7 +51,7 @@ export async function GET() {
     console.error("GET /api/courses error:", error);
     return NextResponse.json(
       { error: "Failed to fetch courses" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

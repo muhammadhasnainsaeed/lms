@@ -1,5 +1,5 @@
-import AuthFormLayout from "@/components/AuthFormLayout";
-import LoginForm from "@/components/LoginForm";
+import AuthFormLayout from "@/components/auth/AuthFormLayout";
+import LoginForm from "@/components/auth/LoginForm";
 import { Button } from "@/components/ui/button";
 import {
   Card,

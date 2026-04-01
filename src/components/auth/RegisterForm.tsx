@@ -10,29 +10,21 @@ import {
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import z from "zod";
-import { CardContent, CardFooter } from "./ui/card";
-import { Button } from "./ui/button";
+import { CardContent, CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { useState } from "react";
 import { Loader2Icon } from "lucide-react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-
-interface LoginResponse {
-  success: boolean;
-  message: string;
-  error: string;
-  redirect: string;
-  data: {
-    email: string;
-    name: string;
-    role: string;
-    createdAt: string;
-    updatedAt: string;
-  };
-}
+import { RegisterSchema, type RegisterInput } from "@/lib/validations/auth";
 
 const fields = [
+  {
+    name: "name",
+    label: "Full Name",
+    type: "text",
+    placeholder: "Your name",
+  },
   {
     name: "email",
     label: "Email",
@@ -41,45 +33,39 @@ const fields = [
   },
   {
     name: "password",
-    label: "Password",
+    label: "Create Password",
     type: "password",
     placeholder: "••••••••",
   },
 ];
-const FormSchema = z.object({
-  email: z
-    .email({ error: "Enter a valid email" })
-    .nonempty({ error: "Email is required" }),
-  password: z.string().nonempty({ error: "Password is required" }),
-});
 
-export default function LoginForm() {
+export default function RegisterForm() {
   const [isSubmit, setIsSubmit] = useState(false);
   const router = useRouter();
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<RegisterInput>({
+    resolver: zodResolver(RegisterSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
     },
   });
 
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
+  async function onSubmit(data: RegisterInput) {
     setIsSubmit(true);
 
     try {
-      const response = await fetch("/api/auth/login", {
+      const response = await fetch("/api/auth/register", {
         method: "post",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
-
-      const result: LoginResponse = await response.json();
+      const result = await response.json();
       if (response.ok) {
-        console.log(JSON.stringify(result, null, 2));
-        router.push(result.redirect);
+        toast.success(result?.message);
+        router.push("/login");
       } else {
         toast.error(result.error);
       }
@@ -98,26 +84,16 @@ export default function LoginForm() {
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <CardContent>
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-5">
             {fields.map((f) => (
               <FormField
                 key={f.name}
                 control={form.control}
-                name={f.name as "email" | "password"}
+                name={f.name as "email" | "password" | "name"}
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid gap-2">
-                      <div className="flex items-center">
-                        <FormLabel>{f.label}</FormLabel>
-                        {f.type === "password" && (
-                          <a
-                            href="#"
-                            className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                          >
-                            Forgot your password?
-                          </a>
-                        )}
-                      </div>
+                      <FormLabel>{f.label}</FormLabel>
                       <FormControl>
                         <Input
                           type={f.type}
@@ -136,10 +112,10 @@ export default function LoginForm() {
         <CardFooter className="flex-col gap-2">
           <Button type="submit" className="w-full">
             <Loader2Icon className={`animate-spin ${!isSubmit && "hidden"}`} />
-            {isSubmit ? "Please wait" : "Login"}
+            {isSubmit ? "Please wait" : "Register"}
           </Button>
           <Button variant="outline" className="w-full">
-            Login with Google
+            Register with Google
           </Button>
         </CardFooter>
       </form>
